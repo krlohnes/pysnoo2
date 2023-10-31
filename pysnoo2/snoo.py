@@ -1,6 +1,9 @@
 """The main API class"""
 from typing import List, Optional
 from datetime import date, datetime, timedelta
+import logging
+
+_LOGGER = logging.getLogger(__name__)
 
 from .const import (SNOO_ME_ENDPOINT,
                     SNOO_DEVICES_ENDPOINT,
@@ -39,7 +42,7 @@ class Snoo:
         async with self.auth.get(SNOO_DEVICES_ENDPOINT) as resp:
             assert resp.status == 200
             resp_json = await resp.json()
-            return [Device.from_dict(d) for d in resp_json]
+            return [Device.from_dict(d) for d in resp_json.get('snoo')]
 
     async def get_baby(self) -> Baby:
         """Return Information about the current User"""
@@ -47,26 +50,11 @@ class Snoo:
             assert resp.status == 200
             return Baby.from_dict(await resp.json())
 
-    async def get_last_session(self) -> LastSession:
+    async def get_last_session(self, baby: str) -> LastSession:
         """Return Information about the last session"""
-        async with self.auth.get(SNOO_SESSIONS_LAST_ENDPOINT) as resp:
+        async with self.auth.get(SNOO_SESSIONS_LAST_ENDPOINT.format(baby)) as resp:
             assert resp.status == 200
             return LastSession.from_dict(await resp.json())
-
-    async def get_aggregated_session(self, start_time: datetime) -> AggregatedSession:
-        """Return Information about the aggregated session
-
-        This function returns information about the next 24h segment beginning from start_time.
-        Note, start_time does not contain or respect a timezone property, but it will assume the
-        timezone that is configured server-side.
-        """
-        url_params = {
-            'startTime': start_time.strftime(DATETIME_FMT_AGGREGATED_SESSION)[:-3]
-        }
-        async with self.auth.get(SNOO_SESSIONS_AGGREGATED_ENDPOINT,
-                                 params=url_params) as resp:
-            assert resp.status == 200
-            return AggregatedSession.from_dict(await resp.json())
 
     async def get_aggregated_session_avg(self,
                                          baby: str,

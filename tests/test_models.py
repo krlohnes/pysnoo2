@@ -4,7 +4,7 @@ import json
 from unittest import TestCase
 from datetime import datetime, timedelta, timezone
 
-from pysnoo import (User, Device, Baby, LastSession,
+from pysnoo22 import (User, Device, Baby, LastSession,
                     ResponsivenessLevel,
                     MinimalLevelVolume,
                     SoothingLevelVolume,

@@ -5,11 +5,11 @@ from asynctest import TestCase, patch, CoroutineMock, ANY, MagicMock
 from callee import Contains
 from oauthlib.oauth2 import OAuth2Error
 
-from pysnoo.const import (OAUTH_LOGIN_ENDPOINT,
+from pysnoo22.const import (OAUTH_LOGIN_ENDPOINT,
                           OAUTH_TOKEN_REFRESH_ENDPOINT,
                           SNOO_API_URI,
                           BASE_HEADERS)
-from pysnoo.auth_session import SnooAuthSession
+from pysnoo22.auth_session import SnooAuthSession
 
 from tests.helpers import load_fixture, get_token
 

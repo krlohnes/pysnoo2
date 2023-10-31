@@ -4,11 +4,12 @@ import asyncio
 import argparse
 import getpass
 import json
+import logging
 from pprint import pprint
 
 from datetime import datetime, timedelta
-from pysnoo import SnooAuthSession, Snoo, SnooPubNub, SessionLevel
-from pysnoo.models import dt_str_to_dt
+from pysnoo2 import SnooAuthSession, Snoo, SnooPubNub, SessionLevel
+from pysnoo2.models import dt_str_to_dt
 
 # pylint: disable=unused-argument
 
@@ -42,27 +43,23 @@ async def device(snoo: Snoo, args):
 
 async def baby(snoo: Snoo, args):
     """baby command"""
+    babyResponse = await snoo.get_baby()
     resonse = await snoo.get_baby()
     pprint(resonse.to_dict())
 
 
 async def last_session(snoo: Snoo, args):
     """last_session command"""
-    resonse = await snoo.get_last_session()
+    babyResponse = await snoo.get_baby()
+    resonse = await snoo.get_last_session(babyResponse.baby)
     pprint(resonse.to_dict())
 
 
 async def status(snoo: Snoo, args):
     """status command"""
-    resonse = await snoo.get_last_session()
+    babyResponse = await snoo.get_baby()
+    resonse = await snoo.get_last_session(babyResponse.baby)
     print(f'{resonse.current_status.value} (since: {resonse.current_status_duration})')
-
-
-async def sessions(snoo: Snoo, args):
-    """sessions command"""
-    resonse = await snoo.get_aggregated_session(args.datetime)
-    pprint(resonse.to_dict())
-
 
 async def session_avg(snoo: Snoo, args):
     """session_avg command"""
@@ -179,7 +176,6 @@ commands = {
     'baby': baby,
     'last_session': last_session,
     'status': status,
-    'sessions': sessions,
     'session_avg': session_avg,
     'total': total,
     'monitor': monitor,
@@ -280,6 +276,9 @@ def main():
 
     # Python 3.7+
     try:
+        logging.basicConfig()
+        logging.getLogger().setLevel(logging.DEBUG)
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy()) #for windows
         asyncio.run(async_main(args.username, args.password, token, token_updater, args))
     except KeyboardInterrupt:
         pass

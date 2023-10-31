@@ -1,7 +1,7 @@
-"""PySnoo setup script."""
+"""PySnoo2 setup script."""
 from setuptools import setup
 
-_VERSION = '0.1.2'
+_VERSION = '0.2'
 
 
 def readme():
@@ -11,16 +11,16 @@ def readme():
 
 
 setup(
-    name='pysnoo',
-    packages=['pysnoo'],
+    name='pysnoo2',
+    packages=['pysnoo2'],
     version=_VERSION,
     description='A Python library and CLI to communicate with'
                 ' the Snoo Smart Baby Sleeper and Bassinet from Happiest Baby',
     long_description=readme(),
     long_description_content_type='text/markdown',
-    author='Martin Riedel',
-    author_email='web@riedel-it.de',
-    url='https://github.com/rado0x54/pysnoo',
+    author='Dan Patten & Martin Riedel',
+    author_email='dan@danpatten.com',
+    url='https://github.com/DanPatten/pysnoo2',
     license='MIT',
     python_requires='>=3.7, <4',
     include_package_data=True,

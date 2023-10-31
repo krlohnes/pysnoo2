@@ -51,6 +51,7 @@ class User:
     region: str
     surname: str
     user_id: str
+    family_Id: str
 
     @staticmethod
     def from_dict(data: dict):
@@ -61,6 +62,7 @@ class User:
             region=data.get("region", ""),
             surname=data.get("surname", ""),
             user_id=data.get("userId", ""),
+            family_Id=data.get("familyId", ""),
         )
 
     def to_dict(self):
@@ -70,7 +72,8 @@ class User:
             "givenName": self.given_name,
             "region": self.region,
             "surname": self.surname,
-            "userId": self.user_id
+            "userId": self.user_id,
+            "familyId": self.family_Id
         }
 
 
@@ -100,7 +103,7 @@ class SSID:
 @dataclass(frozen=True)
 class Device:
     """Object holding Snoo device information."""
-    baby: str  # ID of baby
+    babyIds: [str]  # ID of baby
     created_at: datetime
     firmware_update_date: datetime
     firmware_version: str
@@ -114,7 +117,7 @@ class Device:
     def from_dict(data: dict):
         """Return device object from dict."""
         return Device(
-            baby=data.get("baby", ""),
+            babyIds=data.get("babyIds", ""),
             created_at=dt_str_to_dt(data.get("createdAt", None)),
             firmware_update_date=dt_str_to_dt(data.get("firmwareUpdateDate", None)),
             firmware_version=data.get("firmwareVersion", ""),
@@ -128,7 +131,7 @@ class Device:
     def to_dict(self):
         """Return dict from Object"""
         return {
-            "baby": self.baby,
+            "babyIds": self.babyIds,
             "createdAt": dt_to_dt_str(self.created_at),
             "firmwareUpdateDate": dt_to_dt_str(self.firmware_update_date),
             "firmwareVersion": self.firmware_version,
@@ -218,7 +221,6 @@ class Settings:
     motion_limiter: bool
     weaning: bool
     car_ride_mode: bool
-    offline_lock: bool
     # App restriction is 5-12 (am)
     daytime_start: int
 
@@ -233,7 +235,6 @@ class Settings:
             motion_limiter=data.get("motionLimiter", False),
             weaning=data.get("weaning", False),
             car_ride_mode=data.get("carRideMode", False),
-            offline_lock=data.get("offlineLock", False),
             daytime_start=data.get("daytimeStart", 7)
         )
 
@@ -247,7 +248,6 @@ class Settings:
             "motionLimiter": self.motion_limiter,
             "weaning": self.weaning,
             "carRideMode": self.car_ride_mode,
-            "offlineLock": self.offline_lock,
             "daytimeStart": self.daytime_start
         }
 
@@ -259,6 +259,7 @@ class Baby:
     baby: str  # ID of baby
     baby_name: str
     birth_date: date
+    expected_birth_date: date
     created_at: datetime
     disabled_limiter: bool
     pictures: List[Picture]
@@ -276,11 +277,15 @@ class Baby:
         birth_date = dt_str_to_dt(data.get("birthDate", None))
         if birth_date is not None:
             birth_date = birth_date.date()
+        expected_birth_date = dt_str_to_dt(data.get("expectedBirthDate", None))
+        if expected_birth_date is not None:
+            expected_birth_date = expected_birth_date.date()
 
         return Baby(
             baby=data.get("_id", ""),
             baby_name=data.get("babyName", ""),
             birth_date=birth_date,
+            expected_birth_date=expected_birth_date,
             created_at=dt_str_to_dt(data.get("createdAt", None)),
             disabled_limiter=data.get("disabledLimiter", False),
             pictures=[Picture.from_dict(p) for p in data.get("pictures", [])],
@@ -297,10 +302,15 @@ class Baby:
         if birth_date is not None:
             birth_date = birth_date.isoformat()
 
+        expected_birth_date = self.expected_birth_date
+        if expected_birth_date is not None:
+            expected_birth_date = expected_birth_date.isoformat()
+
         return {
             "baby": self.baby,
             "babyName": self.baby_name,
             "birthDate": birth_date,
+            "expectedBirthDate": expected_birth_date,
             "createdAt": dt_to_dt_str(self.created_at),
             "disabledLimiter": self.disabled_limiter,
             "pictures": [item.to_dict() for item in self.pictures],
