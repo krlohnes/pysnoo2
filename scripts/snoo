@@ -236,7 +236,7 @@ def main():
 
     parser.add_argument(
         'command', default='user', choices=['user', 'device', 'baby',
-                                            'last_session', 'status', 'sessions',
+                                            'last_session', 'status',
                                             'session_avg', 'total', 'monitor',
                                             'history', 'toggle', 'toggle_hold', 'up', 'down']
     )

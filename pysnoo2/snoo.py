@@ -9,7 +9,6 @@ from .const import (SNOO_ME_ENDPOINT,
                     SNOO_DEVICES_ENDPOINT,
                     SNOO_BABY_ENDPOINT,
                     SNOO_SESSIONS_LAST_ENDPOINT,
-                    SNOO_SESSIONS_AGGREGATED_ENDPOINT,
                     SNOO_SESSIONS_AGGREGATED_AVG_ENDPOINT,
                     SNOO_SESSIONS_TOTAL_TIME_ENDPOINT,
                     DATETIME_FMT_AGGREGATED_SESSION)
