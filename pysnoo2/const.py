@@ -10,7 +10,7 @@ SNOO_API_URI = 'https://api-us-east-1-prod.happiestbaby.com'
 
 # OAuth-related
 OAUTH_LOGIN_ENDPOINT = SNOO_API_URI + '/us/v3/login'
-OAUTH_TOKEN_REFRESH_ENDPOINT = SNOO_API_URI + '/us/refresh/'
+OAUTH_TOKEN_REFRESH_ENDPOINT = SNOO_API_URI + '/us/v2/refresh/'
 OAUTH_CLIENT_ID = 'snoo_client'
 OAUTH_SCOPE = ['offline_access']
 

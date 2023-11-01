@@ -8,6 +8,7 @@ Adapted from: https://gist.github.com/kellerza/5ca798f49983bb702bc6e7a05ba53def
 """
 import logging
 import aiohttp
+import json
 
 from oauthlib.common import generate_token, urldecode
 from oauthlib.oauth2 import WebApplicationClient, InsecureTransportError
@@ -89,10 +90,23 @@ class OAuth2Session(aiohttp.ClientSession):
         # Allow customizations for non compliant providers through various
         # hooks to adjust requests and responses.
         self.compliance_hook = {
-            'access_token_response': set(),
+            'access_token_response':  set(),
             'refresh_token_response': set(),
             'protected_request': set(),
         }
+
+        self.register_compliance_hook('access_token_response', self._fix_token_response)
+        self.register_compliance_hook('refresh_token_response', self._fix_token_response) #todo test
+
+    # login endpoint does not conform to RFC 6749
+    def _fix_token_response(self, resp, text):
+        data = json.loads(text)
+        data['access_token'] = data.get('accessToken')
+        data['token_type'] = data.get('tokenType')
+        data['expires_in'] = data.get('expiresIn')
+        data['refresh_token'] = data.get('refreshToken')
+        resp.text = json.dumps(data)
+        return resp
 
     def new_state(self):
         """Generates a state string to be used in authorizations."""
@@ -251,11 +265,14 @@ class OAuth2Session(aiohttp.ClientSession):
                 resp.status)
             _LOGGER.debug('Request headers were %s', headers)
             _LOGGER.debug('Request body was %s', body)
-            text = await resp.text()
+
+            preConvertedText = await resp.text()
+            resp = self._invoke_hooks(resp, preConvertedText, 'access_token_response')
+            text = resp.text
+
             _LOGGER.debug(
                 'Response headers were %s and content %s.',
                 resp.headers, text)
-            self._invoke_hooks(resp, 'access_token_response')
 
             self._client.parse_request_body_response(text, scope=self.scope)
             self.token = self._client.token
@@ -346,7 +363,7 @@ class OAuth2Session(aiohttp.ClientSession):
                 'Response headers were %s and content %s.',
                 resp.headers, text)
 
-            self._invoke_hooks(text, 'refresh_token_response')
+            self._invoke_hooks(text, text, 'refresh_token_response')
 
             self.token = self._client.parse_request_body_response(
                 text, scope=self.scope)
@@ -363,7 +380,7 @@ class OAuth2Session(aiohttp.ClientSession):
         if not is_secure_transport(url):
             raise InsecureTransportError()
         if self.token and not withhold_token:
-            self._invoke_hooks((url, headers, data), 'protected_request')
+            self._invoke_hooks((url, headers, data), None, 'protected_request')
             _LOGGER.debug('Adding token %s to request.', self.token)
             try:
                 url, headers, data = self._client.add_token(
@@ -404,13 +421,13 @@ class OAuth2Session(aiohttp.ClientSession):
         return await super()._request(
             method, url, headers=headers, data=data, **kwargs)
 
-    def _invoke_hooks(self, reqres, hook_type):
+    def _invoke_hooks(self, reqres, text, hook_type):
         _LOGGER.debug(
             "Invoking %d %s hooks.", len(self.compliance_hook[hook_type]),
             hook_type)
         for hook in self.compliance_hook[hook_type]:
             _LOGGER.debug("Invoking hook %s.", hook)
-            reqres = hook(reqres)
+            reqres = hook(reqres, text)
         return reqres
 
     def register_compliance_hook(self, hook_type, hook):
