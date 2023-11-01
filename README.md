@@ -3,8 +3,8 @@
 ![Python package](https://github.com/rado0x54/pysnoo/workflows/Python%20package/badge.svg)
 [![PyPI license](https://img.shields.io/pypi/l/pysnoo)](https://pypi.python.org/pypi/pysnoo)
 [![PyPI versions](https://img.shields.io/pypi/pyversions/pysnoo)](https://pypi.python.org/pypi/pysnoo)
-# pysnoo
-pysnoo is a python library to interact with the SNOO Smart Sleeper Bassinet
+# pysnoo2
+pysnoo2 is a python library to interact with the SNOO Smart Sleeper Bassinet. pysnoo2 is based on pysnoo by @rado0x54
 
 ## Disclaimer
 Please use this library at your own risk and make sure that you do not violate the
@@ -12,7 +12,7 @@ Please use this library at your own risk and make sure that you do not violate t
 
 ## Installation
 ```shell
-pip install pysnoo
+pip install pysnoo2
 ```
 
 ## Programmatic Usage
@@ -21,7 +21,7 @@ Programatically, the project provides two main class inferfaces. The Snoo API Cl
 interface [pubnub.py](https://github.com/rado0x54/pysnoo/blob/master/pysnoo/pubnub.py).
 
 Here's a short example to setup both. It uses the Snoo API Interface to get the Snoo serial number,
-and access token, which are required to initialize the PubNub interface. More usage examples can be
+and access token, and pubnub access token which are required to initialize the PubNub interface. More usage examples can be
 found by looking at the [CLI Tool](https://github.com/rado0x54/pysnoo/blob/master/scripts/snoo) or
 the [unit tests](https://github.com/rado0x54/pysnoo/tree/master/tests).
 
@@ -106,24 +106,31 @@ awake (since: 0:36:27.266366)
 via `CTRL-C`. The command always returns the last historic event when launching.
 ```shell
 # snoo monitor
-{'event': 'activity',
- 'event_time': '2021-02-13T16:02:40.628Z',
- 'left_safety_clip': True,
- 'right_safety_clip': True,
- 'rx_signal': {'rssi': -45, 'strength': 100},
- 'state_machine': {'audio': True,
-                   'down_transition': 'NONE',
-                   'hold': False,
-                   'is_active_session': False,
-                   'session_id': '0',
-                   'since_session_start': None,
-                   'state': 'ONLINE',
-                   'sticky_white_noise': False,
-                   'time_left': None,
-                   'up_transition': 'NONE',
-                   'weaning': False},
- 'sw_version': 'v1.14.12',
- 'system_state': 'normal'}
+{
+    "left_safety_clip": 1,
+    "rx_signal": {
+        "rssi": -45,
+        "strength": 99
+    },
+    "right_safety_clip": 1,
+    "sw_version": "v1.14.22",
+    "event_time_ms": 1698816595667,
+    "state_machine": {
+        "up_transition": "NONE",
+        "since_session_start_ms": -1,
+        "sticky_white_noise": "off",
+        "weaning": "off",
+        "time_left": -1,
+        "session_id": "0",
+        "state": "ONLINE",
+        "is_active_session": "false",
+        "down_transition": "NONE",
+        "hold": "off",
+        "audio": "on"
+    },
+    "system_state": "normal",
+    "event": "status_requested"
+}
 ```
 
 #### toggle
