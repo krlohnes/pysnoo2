@@ -275,8 +275,8 @@ def main():
 
     # Python 3.7+
     try:
-        logging.basicConfig()
-        logging.getLogger().setLevel(logging.DEBUG)
+        logging.basicConfig() #todo delete
+        logging.getLogger().setLevel(logging.DEBUG) #todo delete
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy()) #for windows
         asyncio.run(async_main(args.username, args.password, token, token_updater, args))
     except KeyboardInterrupt:

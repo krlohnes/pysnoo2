@@ -6,8 +6,8 @@ from pubnub.models.consumer.common import PNStatus
 from pubnub.models.consumer.pubsub import PNMessageResult
 
 from asynctest import TestCase, patch, MagicMock
-from pysnoo22 import SnooPubNub, SessionLevel, ActivityState
-from pysnoo22.const import SNOO_PUBNUB_PUBLISH_KEY, SNOO_PUBNUB_SUBSCRIBE_KEY
+from pysnoo2 import SnooPubNub, SessionLevel, ActivityState
+from pysnoo2.const import SNOO_PUBNUB_PUBLISH_KEY, SNOO_PUBNUB_SUBSCRIBE_KEY
 
 from tests.helpers import load_fixture
 
