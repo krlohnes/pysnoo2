@@ -263,6 +263,14 @@ def main():
                         help='Datetime in ISO8601 fromat. Used for some commands.'
                         )
 
+    parser.add_argument('-v',
+                        '--verbose',
+                        help='Show verbose logging.',
+                        action='store_const',
+                        const=logging.DEBUG,
+                        default=logging.WARN,
+    )
+
     args = parser.parse_args()
     token = get_token(args.token_file)
     token_updater = get_token_updater(args.token_file)
@@ -275,8 +283,7 @@ def main():
 
     # Python 3.7+
     try:
-        logging.basicConfig() #todo delete
-        logging.getLogger().setLevel(logging.DEBUG) #todo delete
+        logging.basicConfig(level=args.verbose)
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy()) #for windows
         asyncio.run(async_main(args.username, args.password, token, token_updater, args))
     except KeyboardInterrupt:
