@@ -8,7 +8,7 @@ from pubnub.pnconfiguration import PNConfiguration
 from pubnub.pubnub_asyncio import PubNubAsyncio, utils
 
 from .models import ActivityState, SessionLevel
-from .const import SNOO_PUBNUB_PUBLISH_KEY, SNOO_PUBNUB_SUBSCRIBE_KEY
+from .const import SNOO_PUBNUB_PUBLISH_KEY, SNOO_PUBNUB_SUBSCRIBE_KEY, SNOO_PUBNUB_ORIGIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -54,6 +54,12 @@ class SnooSubscribeListener(SubscribeCallback):
         if not self.disconnected_event.is_set():
             await self.disconnected_event.wait()
 
+class SnooPubNubAuth:
+    """A Python Abstraction for Authenticating to Snoos PubNub Interface."""
+    def __init__(self,
+                 access_token: str):
+        """Initialize the Snoo PubNub object."""
+        self.access_token = access_token
 
 class SnooPubNub:
     """A Python Abstraction for Snoos PubNub Interface."""
@@ -84,6 +90,7 @@ class SnooPubNub:
         pnconfig.uuid = uuid
         pnconfig.auth_key = access_token
         pnconfig.ssl = True
+        pnconfig.origin = SNOO_PUBNUB_ORIGIN
         return pnconfig
 
     def add_listener(self, update_callback: Callable[[ActivityState], None]) -> Callable[[], None]:

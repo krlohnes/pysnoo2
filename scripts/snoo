@@ -22,8 +22,9 @@ async def _setup_pubnub(snoo: Snoo):
         # No devices
         print('There is no Snoo connected to that account!')
         return
+    pubnum_access_token = await snoo.pubnub_auth()
 
-    return SnooPubNub(snoo.auth.access_token,
+    return SnooPubNub(pubnum_access_token,
                       devices[0].serial_number,
                       f'pn-pysnoo-{devices[0].serial_number}')
 
@@ -43,7 +44,6 @@ async def device(snoo: Snoo, args):
 
 async def baby(snoo: Snoo, args):
     """baby command"""
-    babyResponse = await snoo.get_baby()
     resonse = await snoo.get_baby()
     pprint(resonse.to_dict())
 
@@ -53,7 +53,6 @@ async def last_session(snoo: Snoo, args):
     babyResponse = await snoo.get_baby()
     resonse = await snoo.get_last_session(babyResponse.baby)
     pprint(resonse.to_dict())
-
 
 async def status(snoo: Snoo, args):
     """status command"""

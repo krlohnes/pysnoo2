@@ -24,5 +24,7 @@ SNOO_SESSIONS_TOTAL_TIME_ENDPOINT = SNOO_API_URI + '/ss/v2/babies/{}/sessions/to
 # Snoo Pubnub Variables
 SNOO_PUBNUB_SUBSCRIBE_KEY = "sub-c-97bade2a-483d-11e6-8b3b-02ee2ddab7fe"
 SNOO_PUBNUB_PUBLISH_KEY = "pub-c-699074b0-7664-4be2-abf8-dcbb9b6cd2bf"
+SNOO_PUBNUB_ORIGIN = "happiestbaby.pubnubapi.com"
+SNOO_PUBNUB_AUTH_URL = SNOO_API_URI + '/us/me/v10/pubnub/authorize'
 
 DATETIME_FMT_AGGREGATED_SESSION = '%Y-%m-%d %H:%M:%S.%f'

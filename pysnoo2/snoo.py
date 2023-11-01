@@ -11,7 +11,8 @@ from .const import (SNOO_ME_ENDPOINT,
                     SNOO_SESSIONS_LAST_ENDPOINT,
                     SNOO_SESSIONS_AGGREGATED_AVG_ENDPOINT,
                     SNOO_SESSIONS_TOTAL_TIME_ENDPOINT,
-                    DATETIME_FMT_AGGREGATED_SESSION)
+                    DATETIME_FMT_AGGREGATED_SESSION,
+                    SNOO_PUBNUB_AUTH_URL)
 from .auth_session import SnooAuthSession
 from .models import (User, Device, Baby, Sex,
                      MinimalLevel,
@@ -48,6 +49,13 @@ class Snoo:
         async with self.auth.get(SNOO_BABY_ENDPOINT) as resp:
             assert resp.status == 200
             return Baby.from_dict(await resp.json())
+
+    async def pubnub_auth(self) -> str:
+        """Generate an auth token for pubnub """
+        async with self.auth.post(SNOO_PUBNUB_AUTH_URL) as resp:
+            assert resp.status == 200
+            response = await resp.json()
+            return response.get('snoo').get('token')
 
     async def get_last_session(self, baby: str) -> LastSession:
         """Return Information about the last session"""
