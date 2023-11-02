@@ -1,4 +1,4 @@
-"""PySnoo PubNub Interface."""
+"""PySnoo2 PubNub Interface."""
 import asyncio
 import logging
 from typing import Callable, Optional, List

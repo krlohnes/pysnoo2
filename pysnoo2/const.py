@@ -1,4 +1,4 @@
-"""PySnoo Constants."""
+"""PySnoo2 Constants."""
 
 # Base Headers
 BASE_HEADERS = {

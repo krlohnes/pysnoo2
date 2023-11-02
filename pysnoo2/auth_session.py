@@ -1,4 +1,4 @@
-"""PySnoo OAuth Session."""
+"""PySnoo2 OAuth Session."""
 
 import json
 import logging

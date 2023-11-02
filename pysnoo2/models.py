@@ -1,6 +1,6 @@
 import logging
 
-"""PySnoo Data Models."""
+"""PySnoo2 Data Models."""
 from typing import List, Optional
 from dataclasses import dataclass
 from datetime import datetime, date, timedelta, timezone

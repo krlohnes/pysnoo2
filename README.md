@@ -1,8 +1,6 @@
-[![PyPI version](https://badge.fury.io/py/pysnoo.svg)](https://pypi.python.org/pypi/pysnoo)
-[![Coverage Status](https://coveralls.io/repos/github/rado0x54/pysnoo/badge.svg?branch=develop)](https://coveralls.io/github/rado0x54/pysnoo?branch=develop)
-![Python package](https://github.com/rado0x54/pysnoo/workflows/Python%20package/badge.svg)
-[![PyPI license](https://img.shields.io/pypi/l/pysnoo)](https://pypi.python.org/pypi/pysnoo)
-[![PyPI versions](https://img.shields.io/pypi/pyversions/pysnoo)](https://pypi.python.org/pypi/pysnoo)
+[![PyPI version](https://badge.fury.io/py/pysnoo2.svg)](https://pypi.python.org/pypi/pysnoo2)
+[![PyPI license](https://img.shields.io/pypi/l/pysnoo2)](https://pypi.python.org/pypi/pysnoo2)
+[![PyPI versions](https://img.shields.io/pypi/pyversions/pysnoo2)](https://pypi.python.org/pypi/pysnoo2)
 # pysnoo2
 pysnoo2 is a python library to interact with the SNOO Smart Sleeper Bassinet. pysnoo2 is based on pysnoo by @rado0x54
 
