@@ -189,11 +189,11 @@ commands = {
 async def async_main(username, password, token, token_updater, args: any):
     """Async Main"""
 
-    async with SnooAuthSession(token, token_updater) as auth:
+    async with SnooAuthSession(username, password, token, token_updater) as auth:
 
         if not auth.authorized:
             # Init Auth
-            new_token = await auth.fetch_token(username, password)
+            new_token = await auth.fetch_token()
             token_updater(new_token)
 
         snoo = Snoo(auth)
@@ -285,6 +285,7 @@ def main():
     try:
         logging.basicConfig(level=args.verbose)
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy()) #for windows
+        logging.debug("username: %s", args.username)
         asyncio.run(async_main(args.username, args.password, token, token_updater, args))
     except KeyboardInterrupt:
         pass

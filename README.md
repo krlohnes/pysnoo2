@@ -30,7 +30,7 @@ async with SnooAuthSession(token, token_updater) as auth:
 
     if not auth.authorized:
         # Init Auth
-        new_token = await auth.fetch_token(username, password)
+        new_token = await auth.fetch_token()
         token_updater(new_token)
 
     # Snoo API Interface

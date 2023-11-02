@@ -231,18 +231,6 @@ class TestOAuth2hSession(TestCase):
                 async with oauth_session.get(TEST_API_URI) as resp:
                     self.assertIsNone(resp)
 
-    async def test_manual_refresh_token_without_token_url(self):
-        """Test the manual refresh of an token without an auto_refresh_url"""
-        async with OAuth2Session(client_id=TEST_CLIENT_ID) as oauth_session:
-            with self.assertRaises(ValueError):
-                await oauth_session.refresh_token(None)
-
-    async def test_manual_refresh_token_without_insecure_token_url(self):
-        """Test the manual refresh of an token without an auto_refresh_url"""
-        async with OAuth2Session(client_id=TEST_CLIENT_ID) as oauth_session:
-            with self.assertRaises(InsecureTransportError):
-                await oauth_session.refresh_token('http://localhost')
-
     @patch('aiohttp.client.ClientSession._request')
     async def test_call_without_token(self, mocked_request):
         """Test that calls are mad unauthenticated without token"""

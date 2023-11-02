@@ -33,20 +33,20 @@ class Snoo:
 
     async def get_me(self) -> User:
         """Return Information about the current User"""
-        async with self.auth.get(SNOO_ME_ENDPOINT) as resp:
+        async with await self.auth.get(SNOO_ME_ENDPOINT) as resp:
             assert resp.status == 200
             return User.from_dict(await resp.json())
 
     async def get_devices(self) -> List[Device]:
         """Return Information about the configured devices"""
-        async with self.auth.get(SNOO_DEVICES_ENDPOINT) as resp:
+        async with await self.auth.get(SNOO_DEVICES_ENDPOINT) as resp:
             assert resp.status == 200
             resp_json = await resp.json()
             return [Device.from_dict(d) for d in resp_json.get('snoo')]
 
     async def get_baby(self) -> Baby:
         """Return Information about the current User"""
-        async with self.auth.get(SNOO_BABY_ENDPOINT) as resp:
+        async with await self.auth.get(SNOO_BABY_ENDPOINT) as resp:
             assert resp.status == 200
             return Baby.from_dict(await resp.json())
 
@@ -59,7 +59,7 @@ class Snoo:
 
     async def get_last_session(self, baby: str) -> LastSession:
         """Return Information about the last session"""
-        async with self.auth.get(SNOO_SESSIONS_LAST_ENDPOINT.format(baby)) as resp:
+        async with await self.auth.get(SNOO_SESSIONS_LAST_ENDPOINT.format(baby)) as resp:
             assert resp.status == 200
             return LastSession.from_dict(await resp.json())
 
@@ -81,7 +81,7 @@ class Snoo:
             'interval': interval.value,
             'days': str(days).lower(),
         }
-        async with self.auth.get(SNOO_SESSIONS_AGGREGATED_AVG_ENDPOINT.format(baby),
+        async with await self.auth.get(SNOO_SESSIONS_AGGREGATED_AVG_ENDPOINT.format(baby),
                                  params=url_params) as resp:
             assert resp.status == 200
             return AggregatedSessionAvg.from_dict(await resp.json())
@@ -93,7 +93,7 @@ class Snoo:
         :param baby: ID of baby to get the total time for
         :return:
         """
-        async with self.auth.get(SNOO_SESSIONS_TOTAL_TIME_ENDPOINT.format(baby)) as resp:
+        async with await self.auth.get(SNOO_SESSIONS_TOTAL_TIME_ENDPOINT.format(baby)) as resp:
             assert resp.status == 200
             resp_json = await resp.json()
             return timedelta(seconds=resp_json.get('totalTime', 0))

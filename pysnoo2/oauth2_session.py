@@ -386,23 +386,11 @@ class OAuth2Session(aiohttp.ClientSession):
                 url, headers, data = self._client.add_token(
                     url, http_method=method, body=data, headers=headers)
             # Attempt to retrieve and save new access token if expired
-            except TokenExpiredError as token_expired_error:
-                if self.auto_refresh_url:
-                    _LOGGER.debug(
-                        'Auto refresh is set, attempting to refresh at %s.',
-                        self.auto_refresh_url)
-
-                    # We mustn't pass auth twice.
-                    auth = kwargs.pop('auth', None)
-                    if client_id and client_secret and (auth is None):
-                        _LOGGER.debug(
-                            "Encoding client_id '%s' with client_secret as "
-                            "Basic auth credentials.", client_id)
-                        auth = aiohttp.BasicAuth(
-                            login=client_id, password=client_secret)
-                    token = await self.refresh_token(
-                        self.auto_refresh_url, auth=auth, **kwargs)
-                    if self.token_updater:
+            except TokenExpiredError as token_expired_error: #todo other auth failures
+                   _LOGGER.debug('Token expired, getting new token')
+                   auth = kwargs.pop('auth', None)
+                   token = auth.fetch_token()
+                   if self.token_updater:
                         _LOGGER.debug(
                             "Updating token to %s using %s.",
                             token, self.token_updater)
@@ -410,10 +398,8 @@ class OAuth2Session(aiohttp.ClientSession):
                         url, headers, data = self._client.add_token(
                             url, http_method=method, body=data,
                             headers=headers)
-                    else:
+                   else:
                         raise TokenUpdated(token) from token_expired_error
-                else:
-                    raise
 
         _LOGGER.debug('Requesting url %s using method %s.', url, method)
         _LOGGER.debug('Supplying headers %s and data %s', headers, data)
