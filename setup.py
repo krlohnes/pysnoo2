@@ -1,7 +1,7 @@
 """PySnoo2 setup script."""
 from setuptools import setup
 
-_VERSION = '0.2'
+_VERSION = '0.3'
 
 
 def readme():
@@ -18,7 +18,7 @@ setup(
                 ' the Snoo Smart Baby Sleeper and Bassinet from Happiest Baby',
     long_description=readme(),
     long_description_content_type='text/markdown',
-    author='Dan Patten & Martin Riedel',
+    author='Dan Patten',
     author_email='dan@danpatten.com',
     url='https://github.com/DanPatten/pysnoo2',
     license='MIT',
@@ -30,6 +30,7 @@ setup(
     keywords=[
         'baby',
         'snoo',
+        'happiest baby',
         'home automation',
         ],
     classifiers=[
