@@ -52,7 +52,7 @@ class Snoo:
 
     async def pubnub_auth(self) -> str:
         """Generate an auth token for pubnub """
-        async with self.auth.post(SNOO_PUBNUB_AUTH_URL) as resp:
+        async with await self.auth.post(SNOO_PUBNUB_AUTH_URL) as resp:
             assert resp.status == 200
             response = await resp.json()
             return response.get('snoo').get('token')
@@ -114,7 +114,7 @@ class Snoo:
             'sex': sex
         }
 
-        async with self.auth.patch(SNOO_BABY_ENDPOINT, json=request_payload) as resp:
+        async with await self.auth.patch(SNOO_BABY_ENDPOINT, json=request_payload) as resp:
             assert resp.status == 200
             return Baby.from_dict(await resp.json())
 
@@ -127,7 +127,7 @@ class Snoo:
             }
         }
 
-        async with self.auth.patch(SNOO_BABY_ENDPOINT, json=request_payload) as resp:
+        async with await self.auth.patch(SNOO_BABY_ENDPOINT, json=request_payload) as resp:
             assert resp.status == 200
             return Baby.from_dict(await resp.json())
 
@@ -140,7 +140,7 @@ class Snoo:
             }
         }
 
-        async with self.auth.patch(SNOO_BABY_ENDPOINT, json=request_payload) as resp:
+        async with await self.auth.patch(SNOO_BABY_ENDPOINT, json=request_payload) as resp:
             assert resp.status == 200
             return Baby.from_dict(await resp.json())
 
@@ -153,7 +153,7 @@ class Snoo:
             }
         }
 
-        async with self.auth.patch(SNOO_BABY_ENDPOINT, json=request_payload) as resp:
+        async with await self.auth.patch(SNOO_BABY_ENDPOINT, json=request_payload) as resp:
             assert resp.status == 200
             return Baby.from_dict(await resp.json())
 
@@ -166,7 +166,7 @@ class Snoo:
             }
         }
 
-        async with self.auth.patch(SNOO_BABY_ENDPOINT, json=request_payload) as resp:
+        async with await self.auth.patch(SNOO_BABY_ENDPOINT, json=request_payload) as resp:
             assert resp.status == 200
             return Baby.from_dict(await resp.json())
 
@@ -179,7 +179,7 @@ class Snoo:
             }
         }
 
-        async with self.auth.patch(SNOO_BABY_ENDPOINT, json=request_payload) as resp:
+        async with await self.auth.patch(SNOO_BABY_ENDPOINT, json=request_payload) as resp:
             assert resp.status == 200
             return Baby.from_dict(await resp.json())
 
@@ -192,6 +192,6 @@ class Snoo:
             }
         }
 
-        async with self.auth.patch(SNOO_BABY_ENDPOINT, json=request_payload) as resp:
+        async with await self.auth.patch(SNOO_BABY_ENDPOINT, json=request_payload) as resp:
             assert resp.status == 200
             return Baby.from_dict(await resp.json())

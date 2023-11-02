@@ -22,9 +22,10 @@ async def _setup_pubnub(snoo: Snoo):
         # No devices
         print('There is no Snoo connected to that account!')
         return
-    pubnum_access_token = await snoo.pubnub_auth()
 
-    return SnooPubNub(pubnum_access_token,
+    pubnubToken = await snoo.pubnub_auth()
+    return SnooPubNub(pubnubToken, 
+                      snoo.pubnub_auth,
                       devices[0].serial_number,
                       f'pn-pysnoo-{devices[0].serial_number}')
 
