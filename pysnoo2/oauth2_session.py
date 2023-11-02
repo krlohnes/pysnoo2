@@ -281,7 +281,7 @@ class OAuth2Session(aiohttp.ClientSession):
             return self.token
 
         if method.upper() == 'POST':
-            async with self.post(
+            async with await self.post(
                     token_url, data=post_payload_modifier(dict(urldecode(body))),
                     timeout=timeout, headers=headers, auth=auth,
                     verify_ssl=verify_ssl) as resp:  # proxies=proxies
@@ -289,7 +289,7 @@ class OAuth2Session(aiohttp.ClientSession):
 
         if method.upper() == 'GET':
             # if method is not 'POST', switch body to querystring and GET
-            async with self.get(
+            async with await self.get(
                     token_url, params=dict(urldecode(body)),
                     timeout=timeout, headers=headers, auth=auth,
                     verify_ssl=verify_ssl) as resp:  # proxies=proxies
@@ -350,7 +350,7 @@ class OAuth2Session(aiohttp.ClientSession):
                 ),
             }
 
-        async with self.post(
+        async with await self.post(
                 token_url, data=post_payload_modifier(dict(urldecode(body))), auth=auth,
                 timeout=timeout, headers=headers, verify_ssl=verify_ssl,
                 withhold_token=True) as resp:  # proxies=proxies

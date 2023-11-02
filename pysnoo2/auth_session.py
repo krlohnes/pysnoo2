@@ -54,16 +54,43 @@ class SnooAuthSession(OAuth2Session):
         response = await super().get(url, allow_redirects=allow_redirects, **kwargs)
         
         if response.status in {401, 403}:
-            _LOGGER.debug('Received 401 from response, attempting to re-auth')
-            await self.reAuth()
+            _LOGGER.debug('Received 401/403 from response, attempting to re-auth')
+            await self._reAuth()
             response = await super().get(url, allow_redirects=allow_redirects, **kwargs)
-
+        self._logResponse(response)
         return response
     
-    async def reAuth(self):
+    async def post(self, url: StrOrURL, *, data: Any=None, **kwargs: Any):
+        """Perform HTTP POST request."""
+        response = await super().post(url, data=data, **kwargs)
+        
+        if response.status in {401, 403}:
+            _LOGGER.debug('Received 401/403 from response, attempting to re-auth')
+            await self._reAuth()
+            response = await super().post(url, data=data, **kwargs)
+        self._logResponse(response)
+        return response
+    
+    async def patch(self, url: StrOrURL,
+              *, data: Any=None, **kwargs: Any):
+        """Perform HTTP GET request."""
+        response = await super().patch(url, data=data, **kwargs)
+        
+        if response.status in {401, 403}:
+            _LOGGER.debug('Received 401/403 from response, attempting to re-auth')
+            await self._reAuth()
+            response = await super().post(url, data=data, **kwargs)
+        self._logResponse(response)
+        return response
+    
+    async def _reAuth(self):
         _LOGGER.debug('Getting new access token for reauth')
         new_token = await self.fetch_token()
         self.token_updater(new_token)
+
+    def _logResponse(self, response):
+        if response.status != 200:
+            _LOGGER.warn("Response failed with status %s", response.status)
 
     async def fetch_token(self):  # pylint: disable=arguments-differ
         # Note, Snoo OAuth API is not 100% RFC 6749 compliant. (Wrong Content-Type)
@@ -75,12 +102,3 @@ class SnooAuthSession(OAuth2Session):
                                          body='', auth=None, username=self.username, password=self.password, method='POST',
                                          timeout=None, headers=headers, verify_ssl=True,
                                          post_payload_modifier=json.dumps)
-
-    # refresh is not currently working
-    # async def refresh_token(self, token_url: str, **kwargs):  # pylint: disable=arguments-differ
-    #     # Note, Snoo OAuth API is not 100% RFC 6749 compliant. (Wrong Content-Type)
-    #     headers = {
-    #         'Accept': 'application/json',
-    #         'Content-Type': 'application/json;charset=UTF-8',
-    #     }
-    #     return await super().refresh_token(token_url, headers=headers, post_payload_modifier=json.dumps, **kwargs)
