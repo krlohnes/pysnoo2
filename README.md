@@ -6,12 +6,18 @@ pysnoo2 is a python library to interact with the SNOO Smart Sleeper Bassinet. py
 
 ## Disclaimer
 Please use this library at your own risk and make sure that you do not violate the
-[Terms of Service of HappiestBaby](https://www.happiestbaby.com/pages/terms-of-service).
+[Terms of Service of HappiestBaby](https://www.happiestbaby.com/pages/terms-of-service). Note that happiest baby can change their API any anytime and may cause this library to break.
 
 ## Installation
 ```shell
 pip install pysnoo2
 ```
+
+## Known Issues
+1. Refresh tokens are not currently working, access tokens are instead granted every 3 hours as needed.
+
+## To Do
+1. Save pubnub tokens off similar to how access tokens are saved for re-use
 
 ## Programmatic Usage
 Programatically, the project provides two main class inferfaces. The Snoo API Client interface
@@ -39,7 +45,9 @@ async with SnooAuthSession(token, token_updater) as auth:
         print('There is no Snoo connected to that account!')
     else:
         # Snoo PubNub Interface
-        pubnub = SnooPubNub(auth.access_token,
+        pubnubToken = await snoo.pubnub_auth()
+        pubnub = SnooPubNub(pubnubToken,
+                            snoo.pubnub_auth,
                             devices[0].serial_number,
                             f'pn-pysnoo-{devices[0].serial_number}')
     
@@ -76,6 +84,7 @@ optional arguments:
                         Cached token file to read and write an existing OAuth Token to.
   -d DATETIME, --datetime DATETIME
                         Datetime in ISO8601 fromat. Used for some commands.
+  -v, --verbose         Show verbose logging.
 ```
 
 ### Credentials / Token / First Run
@@ -248,33 +257,6 @@ Some of these settings can be upgraded programmatically.
  'endTime': '2021-02-13T16:02:40.635Z',
  'levels': ['BASELINE', 'LEVEL1', 'LEVEL2', 'ONLINE'],
  'startTime': '2021-02-13T15:00:42.604Z'}
-```
-
-#### sessions
-`snoo sessions -d DATETIME` returns all sessions within a `24h` segement AFTER `DATETIME` in ISO8601
-format. Note `DATETIME` does not respect any timezone information, but assumes the local timezone
-that is that up within the account. If not specified `DATETIME` is the timestamp 24h before.
-
-```shell
-# snoo sessions -d 2021-01-30T07:00:00
-{'daySleep': '4:46:18',
- 'levels': [{'isActive': False,
-             'sessionId': '1538910189',
-             'startTime': '2021-01-30T07:00:00.000',
-             'stateDuration': '0:23:18',
-             'type': 'asleep'},
-            ...
-            {'isActive': False,
-             'sessionId': '1010439060',
-             'startTime': '2021-01-31T05:35:16.214',
-             'stateDuration': '1:24:44',
-             'type': 'asleep'}],
- 'longestSleep': '3:25:44',
- 'naps': 5,
- 'nightSleep': '8:12:50',
- 'nightWakings': 4,
- 'timezone': None,
- 'totalSleep': '12:59:08'}
 ```
 
 #### session_avg
