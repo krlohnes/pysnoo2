@@ -337,6 +337,7 @@ class SessionLevel(Enum):
     LEVEL2 = 'LEVEL2'
     LEVEL3 = 'LEVEL3'
     LEVEL4 = 'LEVEL4'
+
     NONE = 'NONE'
     PRETIMEOUT = 'PRETIMEOUT'
     TIMEOUT = 'TIMEOUT'
@@ -348,7 +349,8 @@ class SessionLevel(Enum):
                         SessionLevel.LEVEL1,
                         SessionLevel.LEVEL2,
                         SessionLevel.LEVEL3,
-                        SessionLevel.LEVEL4]
+                        SessionLevel.LEVEL4,
+                        SessionLevel.LEVEL5]
 
 
 class SessionItemType(Enum):

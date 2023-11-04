@@ -168,6 +168,21 @@ async def level_down(snoo: Snoo, args):
 
     await pubnub.stop()
 
+async def go_to_level(snoo: Snoo, args):
+    """go to specific level command"""
+    pubnub = await _setup_pubnub(snoo)
+
+    if args.level in SessionLevel.__members__:
+        level = SessionLevel[args.level]
+    else:
+        raise ValueError("Invalid level value")
+
+    await pubnub.publish_goto_state(level)
+
+    await pubnub.stop()
+    print('Set Snoo level to', args.level)
+
+
 
 # Commands dictionary
 commands = {
@@ -184,6 +199,7 @@ commands = {
     'toggle_hold': toggle_hold,
     'up': level_up,
     'down': level_down,
+    'level': go_to_level
 }
 
 
@@ -238,7 +254,7 @@ def main():
         'command', default='user', choices=['user', 'device', 'baby',
                                             'last_session', 'status',
                                             'session_avg', 'total', 'monitor',
-                                            'history', 'toggle', 'toggle_hold', 'up', 'down']
+                                            'history', 'toggle', 'toggle_hold', 'up', 'down', 'level']
     )
 
     parser.add_argument('-u',
@@ -263,6 +279,13 @@ def main():
                         type=dt_str_to_dt,
                         help='Datetime in ISO8601 fromat. Used for some commands.'
                         )
+    
+    parser.add_argument('-l',
+                    '--level',
+                    default="Baseline",
+                    type=str,
+                    help='Used with the level command to set the current level.'
+                    )
 
     parser.add_argument('-v',
                         '--verbose',
