@@ -349,8 +349,7 @@ class SessionLevel(Enum):
                         SessionLevel.LEVEL1,
                         SessionLevel.LEVEL2,
                         SessionLevel.LEVEL3,
-                        SessionLevel.LEVEL4,
-                        SessionLevel.LEVEL5]
+                        SessionLevel.LEVEL4]
 
 
 class SessionItemType(Enum):

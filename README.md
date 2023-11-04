@@ -86,6 +86,8 @@ optional arguments:
                         Cached token file to read and write an existing OAuth Token to.
   -d DATETIME, --datetime DATETIME
                         Datetime in ISO8601 fromat. Used for some commands.
+  -l level, --level SessionLevel
+                        Used to set the level with the level command. See SessionLevel for valid values.
   -v, --verbose         Show verbose logging.
 ```
 
