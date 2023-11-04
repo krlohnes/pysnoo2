@@ -4,6 +4,8 @@
 # pysnoo2
 pysnoo2 is a python library to interact with the SNOO Smart Sleeper Bassinet. pysnoo2 is based on pysnoo by @rado0x54
 
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/danpatten0)
+
 ## Disclaimer
 Please use this library at your own risk and make sure that you do not violate the
 [Terms of Service of HappiestBaby](https://www.happiestbaby.com/pages/terms-of-service). Note that happiest baby can change their API any anytime and may cause this library to break.
