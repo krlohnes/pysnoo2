@@ -129,6 +129,7 @@ class SnooPubNub:
         pnconfig.ssl = True
         pnconfig.origin = SNOO_PUBNUB_ORIGIN
         pnconfig.reconnect_policy = PNReconnectionPolicy.EXPONENTIAL
+        pnconfig.log_verbosity = True
         return pnconfig
     
     
@@ -189,6 +190,7 @@ class SnooPubNub:
     
     async def _refresh_token(self):
         """Refresh the Snoo token to allow PubNub to reconnect"""
+        _LOGGER.debug('Getting refresh token for pubnub')
         token = await self._authTokenCallback()
         self.config.auth_key = token
 
@@ -225,6 +227,7 @@ class SnooPubNub:
     async def unsubscribe_and_await_disconnect(self):
         """Unsubscribe to Snoo Activity Channel and await disconnect"""
         self.unsubscribe()
+        _LOGGER.debug('Unsubscribe for pubnub')
         await self._listener.wait_for_disconnect()
 
     async def history(self, count=1):
@@ -262,6 +265,7 @@ class SnooPubNub:
         # Workaround until PR is accepted:
         # https://github.com/pubnub/python/pull/99
         # self._pubnub.stop()
+        _LOGGER.debug('Stopping pubnub')
         await self._pubnub._session.close()
         if self._pubnub._subscription_manager is not None:
             self._pubnub._subscription_manager.stop()
