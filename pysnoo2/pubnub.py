@@ -66,7 +66,7 @@ class SnooSubscribeListener(SubscribeCallback):
                 token_refresh_required=token_refresh_required
             ))
 
-    async def message(self, pubnub, message):
+    def message(self, pubnub, message):
         """PubNub Message Callback Implementation"""
         self._activity_state_callback(ActivityState.from_dict(message.message))
 
