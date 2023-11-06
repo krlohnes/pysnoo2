@@ -28,9 +28,7 @@ interface [pubnub.py](https://github.com/rado0x54/pysnoo/blob/master/pysnoo/pubn
 
 Here's a short example to setup both. It uses the Snoo API Interface to get the Snoo serial number,
 and access token, and pubnub access token which are required to initialize the PubNub interface. More usage examples can be
-found by looking at the [CLI Tool](https://github.com/rado0x54/pysnoo/blob/master/scripts/snoo) or
-the [unit tests](https://github.com/rado0x54/pysnoo/tree/master/tests).
-
+found by looking at the [CLI Tool](https://github.com/rado0x54/pysnoo/blob/master/scripts/snoo)
 ```python
 async with SnooAuthSession(token, token_updater) as auth:
 

@@ -66,9 +66,9 @@ class SnooSubscribeListener(SubscribeCallback):
                 token_refresh_required=token_refresh_required
             ))
 
-    def message(self, pubnub, message):
+    async def message(self, pubnub, message):
         """PubNub Message Callback Implementation"""
-        self._activity_state_callback(ActivityState.from_dict(message.message))
+        await self._activity_state_callback(ActivityState.from_dict(message.message))
 
     def presence(self, pubnub, presence):
         """PubNub Presence Callback Implementation"""
@@ -175,10 +175,10 @@ class SnooPubNub:
         """Remove connection update."""
         self._connection_listeners.remove(update_callback)
 
-    def _activity_state_callback(self, state: ActivityState):
+    async def _activity_state_callback(self, state: ActivityState):
         """Internal Callback of SnooSubscribeListener"""
         for update_callback in self._external_listeners:
-            update_callback(state)
+            await update_callback(state)
 
     def _connection_callback(self, connection: ConnectionState):
         """Internal Callback of SnooSubscribeListener"""
