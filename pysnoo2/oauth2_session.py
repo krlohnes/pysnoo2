@@ -387,17 +387,19 @@ class OAuth2Session(aiohttp.ClientSession):
                     url, http_method=method, body=data, headers=headers)
             # Attempt to retrieve and save new access token if expired
             except TokenExpiredError as token_expired_error: #todo other auth failures
-                   _LOGGER.debug('Token expired, getting new token')
+                   _LOGGER.warn('Token expired, getting new token')
                    auth = kwargs.pop('auth', None)
                    token = auth.fetch_token()
+                   self.token = token
                    if self.token_updater:
-                        _LOGGER.debug(
+                        _LOGGER.warn(
                             "Updating token to %s using %s.",
                             token, self.token_updater)
                         self.token_updater(token)
                         url, headers, data = self._client.add_token(
                             url, http_method=method, body=data,
                             headers=headers)
+                        _LOGGER.warn('Token Update complete!')
                    else:
                         raise TokenUpdated(token) from token_expired_error
 
