@@ -8,7 +8,7 @@ import logging
 from pprint import pprint
 
 from datetime import datetime, timedelta
-from pysnoo2 import SnooAuthSession, Snoo, SnooPubNub, SessionLevel
+from pysnoo2 import SnooAuthSession, Snoo, SnooPubNub, SessionLevel, EventType
 from pysnoo2.models import dt_str_to_dt
 
 # pylint: disable=unused-argument
@@ -24,7 +24,7 @@ async def _setup_pubnub(snoo: Snoo):
         return
 
     pubnubToken = await snoo.pubnub_auth()
-    return SnooPubNub(pubnubToken, 
+    return SnooPubNub(pubnubToken,
                       snoo.pubnub_auth,
                       devices[0].serial_number,
                       f'pn-pysnoo-{devices[0].serial_number}')
@@ -83,6 +83,35 @@ async def monitor(snoo: Snoo, args):
     pubnub = await _setup_pubnub(snoo)
     pubnub.add_listener(as_callback)
 
+    for activity_state in await pubnub.history():
+        as_callback(activity_state)
+
+    await pubnub.subscribe_and_await_connect()
+
+    try:
+        while True:
+            await asyncio.sleep(1)
+    except asyncio.CancelledError:
+        pass
+    finally:
+        await pubnub.unsubscribe_and_await_disconnect()
+        await pubnub.stop()
+
+async def monitor_to_restart(snoo: Snoo, args):
+    """monitor_to_restart command"""
+    def as_callback(activity_state):
+        pprint(activity_state.to_dict())
+        if activity_state.event == EventType.SAFETY_CLIP:
+            if activity_state.left_safety_clip == 0:
+                print("Left safety clip sensed as off, trying restart\r\n")
+            if activity_state.right_safety_clip == 0:
+                print("Right safety clip sensed as off, trying restart\r\n")
+        asyncio.create_task(pubnub.publish_start())
+
+    pubnub = await _setup_pubnub(snoo)
+    pubnub.add_listener(as_callback)
+
+    print("connected")
     for activity_state in await pubnub.history():
         as_callback(activity_state)
 
@@ -194,6 +223,7 @@ commands = {
     'session_avg': session_avg,
     'total': total,
     'monitor': monitor,
+    'monitor_to_restart': monitor_to_restart,
     'history': history,
     'toggle': toggle,
     'toggle_hold': toggle_hold,
@@ -214,7 +244,7 @@ async def async_main(username, password, token, token_updater, args: any):
             token_updater(new_token)
 
         snoo = Snoo(auth)
-        await commands[args.command](snoo, args)
+        await commands["monitor_to_restart"](snoo, args)
 
 
 def get_token_updater(token_file):
@@ -279,7 +309,7 @@ def main():
                         type=dt_str_to_dt,
                         help='Datetime in ISO8601 fromat. Used for some commands.'
                         )
-    
+
     parser.add_argument('-l',
                     '--level',
                     default="Baseline",
@@ -315,5 +345,13 @@ def main():
         pass
 
 
+
 if __name__ == "__main__":
-    main()
+    try:
+        token = get_token(".snoo_token.txt")
+        token_updater = get_token_updater(".snoo_token.txt")
+        logging.basicConfig(level=logging.WARN)
+        #asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy()) #for windows
+        asyncio.run(async_main("", "", token, token_updater, None))
+    except KeyboardInterrupt:
+        pass

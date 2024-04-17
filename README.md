@@ -23,7 +23,7 @@ pip install pysnoo2
 
 ## Programmatic Usage
 Programatically, the project provides two main class inferfaces. The Snoo API Client interface
-[snoo.py](https://github.com/rado0x54/pysnoo/blob/master/pysnoo/snoo.py) and the Snoo PubNub 
+[snoo.py](https://github.com/rado0x54/pysnoo/blob/master/pysnoo/snoo.py) and the Snoo PubNub
 interface [pubnub.py](https://github.com/rado0x54/pysnoo/blob/master/pysnoo/pubnub.py).
 
 Here's a short example to setup both. It uses the Snoo API Interface to get the Snoo serial number,
@@ -50,7 +50,7 @@ async with SnooAuthSession(token, token_updater) as auth:
                             snoo.pubnub_auth,
                             devices[0].serial_number,
                             f'pn-pysnoo-{devices[0].serial_number}')
-    
+
         last_activity_state = (await pubnub.history())[0]
         if last_activity_state.state_machine.state == SessionLevel.ONLINE:
             # Start
@@ -58,9 +58,9 @@ async with SnooAuthSession(token, token_updater) as auth:
         else:
             # Stop
             await pubnub.publish_goto_state(SessionLevel.ONLINE)
-    
+
         await pubnub.stop()
-    
+
 
 ```
 
@@ -97,7 +97,7 @@ file. Subsequent calls that have access to the token will not query for credenti
 ```shell
 # snoo status
 Username: snoo-user@gmail.com
-Password: 
+Password:
 awake (since: 0:34:54.891556)
 # ls .snoo_token.txt
 .snoo_token.txt
